@@ -154,12 +154,11 @@ process_response() {
     git_branch=$(get_git_branch)
 
     # Track turn number (simple increment based on existing records in session)
-    local turn_number
+    local turn_number=1
     if [[ -f "$ANALYTICS_FILE" ]]; then
-        turn_number=$(grep -c "\"session_id\":\"${session_id}\"" "$ANALYTICS_FILE" 2>/dev/null || echo "0")
-        turn_number=$((turn_number + 1))
-    else
-        turn_number=1
+        local count
+        count=$(grep -c "\"session_id\":\"${session_id}\"" "$ANALYTICS_FILE" 2>/dev/null) || count=0
+        turn_number=$((count + 1))
     fi
 
     # Find all boxes in the response
@@ -174,7 +173,7 @@ process_response() {
             # If we were already in a box, save the previous one
             if [[ "$in_box" == "true" ]] && [[ -n "$current_box" ]]; then
                 save_box "$current_emoji" "$current_box" "$timestamp" "$session_id" "$git_remote" "$git_branch" "$turn_number"
-                ((boxes_found++))
+                boxes_found=$((boxes_found + 1))
             fi
 
             # Start new box
@@ -185,7 +184,7 @@ process_response() {
             # End of box (closing dashes)
             if [[ -n "$current_box" ]]; then
                 save_box "$current_emoji" "$current_box" "$timestamp" "$session_id" "$git_remote" "$git_branch" "$turn_number"
-                ((boxes_found++))
+                boxes_found=$((boxes_found + 1))
             fi
             in_box=false
             current_box=""
@@ -199,7 +198,7 @@ process_response() {
     # Handle case where box wasn't closed
     if [[ "$in_box" == "true" ]] && [[ -n "$current_box" ]]; then
         save_box "$current_emoji" "$current_box" "$timestamp" "$session_id" "$git_remote" "$git_branch" "$turn_number"
-        ((boxes_found++))
+        boxes_found=$((boxes_found + 1))
     fi
 
     if [[ $boxes_found -gt 0 ]]; then
@@ -280,3 +279,4 @@ main() {
 }
 
 main "$@"
+exit 0
