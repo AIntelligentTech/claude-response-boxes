@@ -4,22 +4,24 @@
 > into AI reasoning, decisions, and self-assessment with **active enforcement**.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.0.0-green.svg)](https://github.com/AIntelligentTech/claude-response-boxes/releases)
+[![Version](https://img.shields.io/badge/version-2.1.0-green.svg)](https://github.com/AIntelligentTech/claude-response-boxes/releases)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Compatible-blueviolet.svg)](https://claude.ai/claude-code)
 
 ---
 
-## What's New in v2.0
+## What's New in v2.1
 
-**Active enforcement replaces passive documentation.** Response quality is now
-ENFORCED via hooks, not just requested.
+- **User vs Project Installation** — Install system-wide or per-project
+- **Centralized Analytics** — All boxes stored at user level with project
+  distinction
+- **Git-Based Project Identification** — Automatic project tracking via
+  `git_remote`
 
-| v1.x (Passive)            | v2.0 (Active)                         |
-| ------------------------- | ------------------------------------- |
-| Rules in CLAUDE.md        | Rules + Stop hook validation          |
-| Claude may forget         | Hooks block incomplete responses      |
-| Manual box collection     | Auto-scoring and indexing             |
-| No cross-session learning | Prior boxes injected at session start |
+| v2.0                      | v2.1                                 |
+| ------------------------- | ------------------------------------ |
+| User-level only           | User OR project-level installation   |
+| Single installation scope | Flexible scope with shared analytics |
+| Basic project tracking    | Robust git_remote-based distinction  |
 
 ---
 
@@ -30,6 +32,7 @@ ENFORCED via hooks, not just requested.
 - **Anti-Sycophancy** — Built-in self-assessment prevents hollow validation
 - **Self-Improvement Loop** — Session-end analysis with headless Claude
 - **Cross-Session Learning** — High-value boxes injected at session start
+- **Cross-Project Analytics** — Centralized storage with project distinction
 - **Box Scoring** — Prioritize important learnings automatically
 - **Zero Config** — One-line install, works immediately
 
@@ -39,12 +42,13 @@ ENFORCED via hooks, not just requested.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                           RESPONSE BOX LIFECYCLE v2.0                               │
+│                           RESPONSE BOX LIFECYCLE v2.1                               │
 ├─────────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                     │
 │  SESSION START                                                                      │
 │  ┌───────────────────────────────────────────────────────────────────────────────┐ │
 │  │  inject-context.sh loads high-value prior boxes from box-index.json           │ │
+│  │  Prioritizes boxes from current repository (same git_remote)                  │ │
 │  └───────────────────────────────────────────────────────────────────────────────┘ │
 │                                       │                                             │
 │                                       ▼                                             │
@@ -52,7 +56,7 @@ ENFORCED via hooks, not just requested.
 │  ┌───────────────────────────────────────────────────────────────────────────────┐ │
 │  │  1. CLAUDE.md pre-response checklist guides box usage                         │ │
 │  │  2. enforce-reminder.sh injects reminders every 3rd tool call                 │ │
-│  │  3. collect-boxes.sh parses responses → boxes.jsonl                           │ │
+│  │  3. collect-boxes.sh parses responses → boxes.jsonl (with git_remote)         │ │
 │  └───────────────────────────────────────────────────────────────────────────────┘ │
 │                                       │                                             │
 │                                       ▼                                             │
@@ -80,8 +84,16 @@ ENFORCED via hooks, not just requested.
 
 ## Quick Install
 
+**User-level (recommended, applies to all projects):**
+
 ```bash
 curl -sSL https://raw.githubusercontent.com/AIntelligentTech/claude-response-boxes/main/install.sh | bash
+```
+
+**Project-level (applies to current project only):**
+
+```bash
+curl -sSL https://raw.githubusercontent.com/AIntelligentTech/claude-response-boxes/main/install.sh | bash -s -- --project
 ```
 
 Or clone and install locally:
@@ -89,15 +101,65 @@ Or clone and install locally:
 ```bash
 git clone https://github.com/AIntelligentTech/claude-response-boxes.git
 cd claude-response-boxes
-./install.sh
+./install.sh [--user|--project]
 ```
 
 **Requirements:** `jq` (for analytics and hook configuration), `bash 4+`
 
-### Installation Options
+---
+
+## Installation Scopes
+
+The system supports two installation scopes:
+
+| Scope       | Target Directory | Applies To                 | Use Case                   |
+| ----------- | ---------------- | -------------------------- | -------------------------- |
+| **User**    | `~/.claude/`     | All projects (system-wide) | Personal development setup |
+| **Project** | `./.claude/`     | Current project only       | Team-shared project config |
+
+### What Goes Where
+
+| Component     | User Install | Project Install | Why                                   |
+| ------------- | ------------ | --------------- | ------------------------------------- |
+| Rules         | `~/.claude/` | `./.claude/`    | Scope-specific enforcement            |
+| Hooks         | `~/.claude/` | `./.claude/`    | Scope-specific hooks                  |
+| Scripts       | `~/.claude/` | `~/.claude/`    | Always user-level (shared utilities)  |
+| Config        | `~/.claude/` | `~/.claude/`    | Always user-level (shared settings)   |
+| **Analytics** | `~/.claude/` | `~/.claude/`    | **Always user-level** (cross-project) |
+
+### Project Distinction in Analytics
+
+Box records are **always** stored at `~/.claude/analytics/boxes.jsonl`
+regardless of installation scope. Project distinction is maintained via the
+`git_remote` field in each record:
+
+```json
+{
+  "ts": "2026-01-21T12:00:00Z",
+  "type": "Choice",
+  "fields": { "selected": "Option A", "alternatives": "Option B" },
+  "context": {
+    "git_remote": "github.com/org/my-project",
+    "git_branch": "main",
+    "session_id": "abc123"
+  }
+}
+```
+
+This enables:
+
+- Cross-project learning (patterns apply across all your work)
+- Project-specific filtering (`analyze-boxes.sh -r github.com/org/my-project`)
+- Same-repo prioritization in session-start injection
+
+---
+
+## Installation Options
 
 ```bash
-./install.sh              # Full installation
+./install.sh              # User-level (default, recommended)
+./install.sh --user       # Explicit user-level
+./install.sh --project    # Project-level (current directory)
 ./install.sh --no-hooks   # Rules only (no enforcement)
 ./install.sh --hooks-only # Hooks only (skip rules)
 ./install.sh --uninstall  # Remove components
@@ -203,7 +265,7 @@ export BOX_DEEP_ANALYSIS=true
 When a new session starts, `inject-context.sh`:
 
 1. Loads high-value boxes from the index
-2. Prioritizes boxes from the same repository
+2. **Prioritizes boxes from the same repository** (1.5x relevance boost)
 3. Injects them as context (e.g., prior assumptions, corrections)
 
 **Disable injection:**
@@ -219,13 +281,13 @@ export BOX_INJECT_DISABLED=true
 ### Manual Analysis
 
 ```bash
-# Full analysis
+# Full analysis (all projects)
 ~/.claude/scripts/analyze-boxes.sh
 
 # Last 7 days
 ~/.claude/scripts/analyze-boxes.sh -d 7
 
-# Specific repo
+# Specific project (by git remote)
 ~/.claude/scripts/analyze-boxes.sh -r github.com/org/repo
 
 # JSON output
@@ -247,10 +309,13 @@ export BOX_INJECT_DISABLED=true
 | Pushback rate           | Is Claude challenging appropriately?     |
 | Sycophancy scores       | Tracking anti-sycophancy compliance      |
 | Completion confidence   | Task reassessment quality                |
+| Boxes by repository     | Which projects generate most learnings?  |
 
 ---
 
 ## File Structure
+
+### User-Level Installation (default)
 
 ```
 ~/.claude/
@@ -266,11 +331,34 @@ export BOX_INJECT_DISABLED=true
 │   ├── score-boxes.sh             # Score boxes by importance
 │   └── session-end-analyze.sh     # Session-end analysis + indexing
 ├── config/
-│   └── scoring-weights.json       # Customizable scoring weights
-└── analytics/
-    ├── boxes.jsonl                # Raw box storage
-    ├── box-index.json             # High-value box index
-    └── session-analyses.jsonl     # Deep analysis results
+│   ├── scoring-weights.json       # Customizable scoring weights
+│   └── claude-md-snippet.md       # CLAUDE.md snippet reference
+├── analytics/                     # ALWAYS at user level
+│   ├── boxes.jsonl                # Raw box storage (all projects)
+│   ├── box-index.json             # High-value box index
+│   └── session-analyses.jsonl     # Deep analysis results
+└── CLAUDE.md                      # Global instructions
+```
+
+### Project-Level Installation
+
+```
+./.claude/                         # Project-specific
+├── rules/
+│   └── response-boxes.md          # Project rules
+├── hooks/
+│   ├── collect-boxes.sh           # Project hooks
+│   ├── validate-response.sh
+│   ├── enforce-reminder.sh
+│   └── inject-context.sh
+├── settings.json                  # Project hook configuration
+└── CLAUDE.md                      # Project instructions
+
+~/.claude/                         # Shared (user-level)
+├── scripts/                       # Shared utilities
+├── config/                        # Shared configuration
+└── analytics/                     # Centralized storage (all projects)
+    └── boxes.jsonl                # Contains git_remote for distinction
 ```
 
 ---
@@ -286,10 +374,13 @@ export BOX_INJECT_DISABLED=true
 | `BOX_DEEP_ANALYSIS`     | `false`                           | Enable headless Claude analysis    |
 | `BOX_INJECT_DISABLED`   | `false`                           | Disable session-start injection    |
 | `BOX_INJECT_COUNT`      | `5`                               | Number of boxes to inject          |
+| `PROJECT_ID`            | (auto-detected)                   | Override project identifier        |
 
 ### Manual Hook Configuration
 
-If auto-configuration fails, add to `~/.claude/settings.json`:
+If auto-configuration fails, add to your settings.json:
+
+**User-level (`~/.claude/settings.json`):**
 
 ```json
 {
@@ -318,6 +409,44 @@ If auto-configuration fails, add to `~/.claude/settings.json`:
           {
             "type": "command",
             "command": "~/.claude/hooks/enforce-reminder.sh",
+            "timeout": 2
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Project-level (`./.claude/settings.json`):**
+
+```json
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.claude/hooks/validate-response.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/session-end-analyze.sh -q",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.claude/hooks/enforce-reminder.sh",
             "timeout": 2
           }
         ]
