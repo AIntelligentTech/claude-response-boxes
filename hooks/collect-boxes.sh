@@ -223,9 +223,9 @@ save_box() {
     local fields
     fields=$(parse_box "$box_content" "$box_type")
 
-    # Build the JSON record
+    # Build the JSON record (compact single-line for JSONL)
     local record
-    record=$(jq -n \
+    record=$(jq -c -n \
         --arg ts "$timestamp" \
         --arg type "$box_type" \
         --argjson fields "$fields" \

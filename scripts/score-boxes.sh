@@ -92,9 +92,13 @@ score_boxes() {
                        --arg current_repo "$current_repo" \
                        --argjson now "$now" \
                        --argjson threshold "$threshold" '
+        # Helper function to normalize timestamp (handle +00:00 and Z formats)
+        def normalize_ts($ts):
+            $ts | gsub("\\+00:00$"; "Z") | gsub("\\+[0-9][0-9]:[0-9][0-9]$"; "Z");
+
         # Helper function to calculate days since timestamp
         def days_since($ts):
-            (($now - ($ts | fromdateiso8601)) / 86400) | floor;
+            (($now - (normalize_ts($ts) | fromdateiso8601)) / 86400) | floor;
 
         # Helper function to calculate recency decay
         def recency_decay($days):
