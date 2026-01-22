@@ -46,14 +46,15 @@ Before submitting:
 
 # Verify files installed correctly
 ls -la ~/.claude/rules/response-boxes.md
-ls -la ~/.claude/hooks/collect-boxes.sh
-ls -la ~/.claude/scripts/analyze-boxes.sh
+ls -la ~/.claude/hooks/inject-context.sh
+ls -la ~/.claude/hooks/session-processor.sh
+ls -la ~/.claude/skills/analyze-boxes/SKILL.md
 
 # Test collection hook
-echo "Test response with ⚖️ Choice box" | ~/.claude/hooks/collect-boxes.sh
+echo '{"session_id":"test","transcript_path":"/tmp/does-not-exist","cwd":"'"$PWD"'"}' | ~/.claude/hooks/session-processor.sh
 
-# Test analysis script
-~/.claude/scripts/analyze-boxes.sh --help
+# Test analysis in Claude Code
+# Run: /analyze-boxes
 ```
 
 ## Development Setup
@@ -63,7 +64,7 @@ git clone https://github.com/AIntelligentTech/claude-response-boxes.git
 cd claude-response-boxes
 
 # Make scripts executable
-chmod +x install.sh hooks/*.sh scripts/*.sh
+chmod +x install.sh hooks/*.sh
 ```
 
 ## Questions?
