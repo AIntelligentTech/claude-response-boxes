@@ -47,6 +47,7 @@ INSTALL_MODE="full"
 INSTALL_WINDSURF_BASIC=false
 INSTALL_WINDSURF_FULL=false
 INSTALL_CURSOR_BASIC=false
+INSTALL_CURSOR_ENHANCED=false
 
 # Colors
 RED='\033[0;31m'
@@ -120,6 +121,7 @@ parse_args() {
             --install-windsurf-basic) INSTALL_WINDSURF_BASIC=true; shift ;;
             --install-windsurf) INSTALL_WINDSURF_FULL=true; shift ;;
             --install-cursor-basic) INSTALL_CURSOR_BASIC=true; shift ;;
+            --install-cursor) INSTALL_CURSOR_ENHANCED=true; shift ;;
             --help|-h)   show_help; exit 0 ;;
             *)           warn "Unknown option: $1"; shift ;;
         esac
@@ -148,6 +150,7 @@ OPTIONS:
   --install-windsurf Install Response Boxes full mode for Windsurf (hooks + workflow)
   --install-cursor-basic
                      Install Response Boxes basic-mode rule for Cursor (project-level)
+  --install-cursor   Install Response Boxes enhanced mode for Cursor (hooks + skill)
   --help, -h         Show this help
 EOF
 }
@@ -755,6 +758,36 @@ install_cursor_basic() {
     install_managed_file "agents/cursor/rules/response-boxes.mdc" "$dst"
 }
 
+install_cursor_enhanced() {
+    if [[ "$INSTALL_SCOPE" != "user" ]]; then
+        info "Cursor enhanced mode is user-level only; skipping for project scope"
+        return 0
+    fi
+
+    log "Installing Cursor enhanced mode (hooks + skill)..."
+
+    # Create directories
+    local cursor_hooks_dir="${HOME}/.response-boxes/hooks"
+    run_cmd mkdir -p "$cursor_hooks_dir"
+
+    # Install the collector hook script
+    install_managed_file "agents/cursor/hooks/cursor-collector.sh" "${cursor_hooks_dir}/cursor-collector.sh" "+x"
+
+    # Cursor hooks.json needs to be in project-level .cursor/hooks/
+    # We'll install the template to the response-boxes directory for reference
+    install_managed_file "agents/cursor/hooks/hooks.json" "${HOME}/.response-boxes/cursor-hooks.json"
+
+    # Install the skill to user-level (Cursor can read from ~/.cursor/skills/)
+    local cursor_skills_dir="${HOME}/.cursor/skills/response-boxes-context"
+    run_cmd mkdir -p "$cursor_skills_dir"
+    install_managed_file "agents/cursor/skills/response-boxes-context/SKILL.md" "${cursor_skills_dir}/SKILL.md"
+
+    log "Cursor enhanced mode installation complete"
+    info "IMPORTANT: Cursor hooks are project-level. Copy ~/.response-boxes/cursor-hooks.json"
+    info "          to .cursor/hooks/hooks.json in each project where you want collection."
+    info "Run /response-boxes-context in Cursor to see prior learnings."
+}
+
 install_windsurf_full() {
     if [[ "$INSTALL_SCOPE" != "user" ]]; then
         info "Windsurf full mode is user-level only; skipping for project scope"
@@ -961,6 +994,13 @@ main() {
         echo ""
         info "Installing Windsurf full-mode integration..."
         install_windsurf_full
+    fi
+
+    # Cursor enhanced mode (hooks + skill)
+    if [[ "$INSTALL_CURSOR_ENHANCED" == "true" ]]; then
+        echo ""
+        info "Installing Cursor enhanced-mode integration..."
+        install_cursor_enhanced
     fi
 
     if [[ "$CLEANUP_LEGACY" == "true" ]]; then

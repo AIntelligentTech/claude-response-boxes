@@ -120,3 +120,59 @@ reference for detailed box semantics and examples.
 When helpful, you may conceptually "consult" that spec to ensure your behavior
 stays aligned, but you **must not** assume any automatic cross-session storage
 or analytics. All learning remains **within this Cursor session** in basic mode.
+
+## Cross-session learning (enhanced mode)
+
+### Architectural Limitation
+
+Cursor hooks are **observation-only**. They can capture data but cannot inject
+context into the next prompt. This means:
+
+- **Collection**: Automatic via `afterAgentResponse` hook
+- **Injection**: Manual via `/response-boxes-context` skill
+
+### Enhanced mode setup
+
+If you have installed Response Boxes with the `--install-cursor` flag:
+
+1. **Automatic collection** — The `afterAgentResponse` hook captures boxes from
+   your responses and appends `BoxCreated` events to the shared event store at
+   `~/.response-boxes/analytics/boxes.jsonl`
+
+2. **Manual injection** — Run `/response-boxes-context` at the start of a
+   session to see learnings and notable boxes from prior sessions
+
+3. **Analysis** — Run `/analyze-boxes` in Claude Code to synthesize learnings
+   from boxes. Those learnings will appear when you run `/response-boxes-context`
+
+### Skills
+
+| Skill | Description |
+|-------|-------------|
+| `/response-boxes-context` | Display prior learnings for manual reference |
+
+### Environment variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `BOX_INJECT_LEARNINGS` | 3 | Max learnings to display |
+| `BOX_INJECT_BOXES` | 5 | Max boxes to display |
+| `RESPONSE_BOXES_DISABLED` | false | Disable collection hook |
+| `RESPONSE_BOXES_FILE` | `~/.response-boxes/analytics/boxes.jsonl` | Event store path |
+
+### Applying prior learnings
+
+When `/response-boxes-context` shows relevant learnings:
+
+1. Review the projected patterns and boxes
+2. Apply relevant learnings to your current task
+3. Use a 🔄 Reflection box to show what prior learning you're applying
+
+Example:
+```
+🔄 Reflection ───────────────────────────────────
+**Prior:** User prefers Zod for validation (from cross-session context)
+**Learning:** This preference was confirmed across multiple sessions
+**Application:** Using Zod instead of Yup for this schema
+────────────────────────────────────────────────
+```
