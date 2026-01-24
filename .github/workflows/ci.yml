@@ -1,0 +1,109 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: "./agents"
+          severity: warning
+
+      - name: Check shell scripts are executable
+        run: |
+          for script in agents/*/hooks/*.sh; do
+            if [[ -f "$script" ]]; then
+              echo "Checking $script..."
+              # Verify shebang exists
+              head -1 "$script" | grep -q "^#!/" || echo "Warning: $script missing shebang"
+            fi
+          done
+
+  test-bash:
+    name: Bash Tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install bats
+        run: |
+          if [[ "$RUNNER_OS" == "Linux" ]]; then
+            sudo apt-get update
+            sudo apt-get install -y bats
+          else
+            brew install bats-core
+          fi
+
+      - name: Install jq
+        run: |
+          if [[ "$RUNNER_OS" == "Linux" ]]; then
+            sudo apt-get install -y jq
+          else
+            brew install jq
+          fi
+
+      - name: Run hook tests
+        run: bats tests/hooks/*.bats
+
+      - name: Run installer tests
+        run: bats tests/installer/*.bats
+
+  test-typescript:
+    name: TypeScript Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: cd tests/opencode && bun install
+
+      - name: Run tests
+        run: cd tests/opencode && bun test
+
+  installer:
+    name: Installer Dry Run
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install jq
+        run: |
+          if [[ "$RUNNER_OS" == "Linux" ]]; then
+            sudo apt-get update
+            sudo apt-get install -y jq
+          else
+            brew install jq
+          fi
+
+      - name: Test installer (dry-run, user scope)
+        run: ./install.sh --dry-run
+
+      - name: Test installer (dry-run, project scope)
+        run: ./install.sh --project --dry-run
+
+      - name: Test installer (dry-run, basic mode)
+        run: ./install.sh --basic --dry-run
+
+      - name: Test uninstaller (dry-run)
+        run: ./install.sh --uninstall --dry-run
