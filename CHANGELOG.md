@@ -8,6 +8,42 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-01-25
+
+### Breaking Changes
+
+- **Removed 🪞 Sycophancy box** — Anti-sycophancy is now a sophisticated
+  internal protocol based on research (ELEPHANT framework, SMART, self-blinding
+  studies). It operates during response generation without visible output.
+
+### Added
+
+- `agents/claude-code/rules/anti-sycophancy.md` — Research-backed protocol with:
+  - Five dimensions of sycophancy detection (ELEPHANT framework)
+  - System 2 self-interrogation stages
+  - Third-person perspective technique (63.8% efficacy)
+  - Counterfactual checking
+  - Banned phrases with replacements
+  - Integration guidance with existing response boxes
+
+### Changed
+
+- Box count reduced from 13 to 12
+- Existing Sycophancy boxes preserved in event store but filtered from context
+  injection
+
+### Research References
+
+- [Towards Understanding Sycophancy](https://arxiv.org/abs/2310.13548)
+- [ELEPHANT Framework](https://arxiv.org/html/2505.13995v2)
+- [Self-Blinding Research](https://arxiv.org/html/2601.14553)
+- [SMART Framework](https://arxiv.org/html/2509.16742v1)
+
+### Migration
+
+No action required. Sycophancy boxes will no longer appear in responses.
+Historical Sycophancy boxes remain in the event store but are not projected.
+
 ## [0.5.0] - 2026-01-24
 
 ### Added

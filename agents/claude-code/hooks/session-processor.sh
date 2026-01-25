@@ -55,7 +55,6 @@ declare -A INITIAL_SCORES=(
     ["Concern"]=65
     ["Confidence"]=60
     ["Decision"]=55
-    ["Sycophancy"]=50
     ["Suggestion"]=45
     ["Quality"]=40
     ["FollowUps"]=35
@@ -93,7 +92,6 @@ emoji_to_type() {
         "⚠️") echo "Concern" ;;
         "💡") echo "Suggestion" ;;
         "🚨") echo "Warning" ;;
-        "🪞") echo "Sycophancy" ;;
         "✅") echo "Quality" ;;
         "📋") echo "FollowUps" ;;
         "🏁") echo "Completion" ;;
@@ -142,7 +140,7 @@ parse_boxes_from_content() {
 
     while IFS= read -r line; do
         # Check for box start
-        if [[ "$line" =~ ^(⚖️|🎯|💭|📊|↩️|⚠️|💡|🚨|🪞|✅|📋|🏁|🔄)[[:space:]].*─+ ]]; then
+        if [[ "$line" =~ ^(⚖️|🎯|💭|📊|↩️|⚠️|💡|🚨|✅|📋|🏁|🔄)[[:space:]].*─+ ]]; then
             # Save previous box if exists
             if [[ "$in_box" == "true" ]] && [[ -n "$current_box" ]]; then
                 emit_box_created "$current_emoji" "$current_box" "$session_id" "$git_remote" "$git_branch" "$timestamp" "$turn_number"

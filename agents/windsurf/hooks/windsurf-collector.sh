@@ -128,7 +128,7 @@ calculate_score() {
         Choice|Completion|Concern|Confidence|Decision)
             echo 60
             ;;
-        Sycophancy|Suggestion|Quality|"Follow Ups"|FollowUps)
+        Suggestion|Quality|"Follow Ups"|FollowUps)
             echo 40
             ;;
         *)

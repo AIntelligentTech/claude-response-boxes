@@ -82,9 +82,9 @@ adapt to Cursor, but the semantics should remain consistent.
   - When stepping back to evaluate your own work.
   - Note what went well, what you’d change, and any patterns noticed.
 
-Use **Sycophancy** sparingly and only when you are explicitly diagnosing or
-correcting flattery vs honesty. Do not use boxes to flatter the user; use them
-to **improve reasoning quality**.
+Anti-sycophancy behavior is handled internally through a separate protocol. Focus
+on providing honest, direct technical responses without unnecessary validation
+or praise. See `rules/anti-sycophancy.md` for the full protocol.
 
 ## When to use boxes
 

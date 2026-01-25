@@ -37,7 +37,6 @@ Before completing any substantive response (>300 characters):
 [ ] Made a judgment call?               → 🎯 Decision
 [ ] Filled unstated requirement?        → 💭 Assumption
 [ ] Completing a task?                  → 🏁 Completion
-[ ] Substantive response?               → 🪞 Sycophancy (always)
 ```
 
 ---
@@ -65,7 +64,6 @@ Before completing any substantive response (>300 characters):
 | 📋 Follow Ups | Next steps exist     | Immediate, Consider, Related                  |
 | 🏁 Completion | Task being completed | Request, Completed, Confidence, Gaps, Improve |
 | ✅ Quality    | Code was written     | Rating (X/10), Justification                  |
-| 🪞 Sycophancy | Always (substantive) | Rating (X/10), Check                          |
 
 ---
 
@@ -87,8 +85,6 @@ annotates.
 
 ### Always Required
 
-- **🪞 Sycophancy** — Every substantive response (self-assessment against
-  sycophantic patterns)
 - **🏁 Completion** — Every task completion (forces reassessment of original
   request)
 
@@ -148,7 +144,8 @@ At session start, you may receive context with two types of information:
 ### Terminology
 
 - **Recent Notable Boxes** are raw evidence from past sessions
-- **Patterns** are synthesized learnings (and sometimes meta-learnings) derived from many boxes
+- **Patterns** are synthesized learnings (and sometimes meta-learnings) derived
+  from many boxes
 
 ### Patterns (AI-Synthesized Learnings)
 

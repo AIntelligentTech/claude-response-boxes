@@ -1,6 +1,6 @@
 # Response Boxes Architecture
 
-**Version:** 0.5.0
+**Version:** 0.6.0
 
 This document defines the technical architecture of the Response Box System, an
 event-sourced metacognitive framework for AI coding agents.
@@ -542,7 +542,6 @@ Where:
 | Concern    | 65    | Risk flagged                      |
 | Confidence | 60    | Uncertainty noted                 |
 | Decision   | 55    | Judgment call                     |
-| Sycophancy | 50    | Self-assessment                   |
 | Suggestion | 45    | Optional improvement              |
 | Quality    | 40    | Code assessment                   |
 | FollowUps  | 35    | Next steps                        |
@@ -920,6 +919,12 @@ Existing `boxes.jsonl` entries (if any) are compatible:
 ---
 
 ## Changelog
+
+- **v0.6.0** (2026-01-25): Anti-sycophancy separation
+  - Removed 🪞 Sycophancy box from response box taxonomy
+  - Created `rules/anti-sycophancy.md` with research-backed protocol
+  - Historical Sycophancy boxes filtered from projection
+  - Box count reduced from 13 to 12
 
 - **v0.5.0** (2026-01-24): Multi-agent support
   - Added OpenCode plugin with full collection and injection

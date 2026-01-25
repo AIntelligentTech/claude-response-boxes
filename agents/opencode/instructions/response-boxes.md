@@ -24,7 +24,6 @@ Before completing any substantive response (>300 characters):
 [ ] Made a judgment call?               → 🎯 Decision
 [ ] Filled unstated requirement?        → 💭 Assumption
 [ ] Completing a task?                  → 🏁 Completion
-[ ] Substantive response?               → 🪞 Sycophancy (always)
 ```
 
 ## Box Types
@@ -45,12 +44,11 @@ Before completing any substantive response (>300 characters):
 
 ### End Boxes (max 3, in order)
 
-| Box           | When                     | Fields                                        |
-| ------------- | ------------------------ | --------------------------------------------- |
-| 📋 Follow Ups | Next steps exist         | Immediate, Consider, Related                  |
-| 🏁 Completion | Task being completed     | Request, Completed, Confidence, Gaps, Improve |
-| ✅ Quality    | Code was written         | Rating (X/10), Justification                  |
-| 🪞 Sycophancy | **Always** (substantive) | Rating (X/10), Check                          |
+| Box           | When                 | Fields                                        |
+| ------------- | -------------------- | --------------------------------------------- |
+| 📋 Follow Ups | Next steps exist     | Immediate, Consider, Related                  |
+| 🏁 Completion | Task being completed | Request, Completed, Confidence, Gaps, Improve |
+| ✅ Quality    | Code was written     | Rating (X/10), Justification                  |
 
 ## Box Format
 
@@ -87,21 +85,11 @@ Use 45 dashes for the header line.
 ────────────────────────────────────────────────
 ```
 
-### Sycophancy Box
-
-```
-🪞 Sycophancy ───────────────────────────────────
-**Rating:** 9/10
-**Check:** Direct technical response, no unnecessary validation
-────────────────────────────────────────────────
-```
-
 ## Required Boxes
 
-| Box           | When Required                           |
-| ------------- | --------------------------------------- |
-| 🪞 Sycophancy | Every substantive response (>300 chars) |
-| 🏁 Completion | Every task completion                   |
+| Box           | When Required         |
+| ------------- | --------------------- |
+| 🏁 Completion | Every task completion |
 
 ## Skip Boxes For
 
@@ -154,7 +142,8 @@ Apply relevant learnings proactively using 🔄 Reflection boxes.
    noise.
 2. **Transparency** — Surface reasoning, don't hide it.
 3. **Self-critique** — Use Completion boxes to force reassessment.
-4. **Anti-sycophancy** — Rate yourself honestly in Sycophancy boxes.
+4. **Anti-sycophancy** — Provide honest, direct responses without unnecessary
+   validation or praise. See `rules/anti-sycophancy.md` for the full protocol.
 
 ## See Also
 

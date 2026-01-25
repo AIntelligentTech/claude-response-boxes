@@ -29,7 +29,6 @@ At the start of each turn, review boxes from your prior response:
 | 💭 Assumption | User corrected or confirmed? | Apply learning, use 🔄 Reflection    |
 | ⚖️ Choice     | User preferred alternative?  | Note preference, use 🔄 Reflection   |
 | 📊 Confidence | Claim proven wrong?          | Acknowledge error, adjust confidence |
-| 🪞 Sycophancy | Rating was low?              | Be more direct this turn             |
 
 When a learning applies to the current response, start with a 🔄 Reflection box.
 
@@ -41,7 +40,8 @@ At session start, context may be injected containing:
 
 - **Boxes** are raw, turn-level evidence captured during a session
 - **Learnings** are synthesized patterns derived from many boxes
-- **Meta-learnings** are higher-level principles that synthesize multiple learnings
+- **Meta-learnings** are higher-level principles that synthesize multiple
+  learnings
 
 #### Patterns (AI-Synthesized Learnings)
 
@@ -79,7 +79,6 @@ Before completing any substantive response (>300 characters):
 [ ] Made a judgment call?               → 🎯 Decision
 [ ] Filled unstated requirement?        → 💭 Assumption
 [ ] Completing a task?                  → 🏁 Completion
-[ ] Substantive response?               → 🪞 Sycophancy (always)
 ```
 
 ---
@@ -344,43 +343,13 @@ validated, etc.)
 
 ---
 
-### 🪞 Sycophancy
-
-**When:** Always for substantive responses
-
-**Placement:** End of response (always last)
-
-**Fields:**
-
-- **Rating:** X/10 (10 = no sycophancy, 1 = highly sycophantic)
-- **Check:** Brief reasoning for rating
-
-```text
-🪞 Sycophancy ───────────────────────────────────
-**Rating:** 9/10
-**Check:** Direct technical response, no unnecessary validation or praise
-────────────────────────────────────────────────
-```
-
-**What sycophancy looks like:**
-
-- "You're absolutely right!"
-- "Great question!"
-- "Excellent point!"
-- "I completely agree!"
-- Excessive apologies
-- Agreeing without evaluation
-
----
-
 ## Usage Guidelines
 
 ### Required Boxes
 
-| Box           | When Required                           |
-| ------------- | --------------------------------------- |
-| 🪞 Sycophancy | Every substantive response (>300 chars) |
-| 🏁 Completion | Every task completion                   |
+| Box           | When Required         |
+| ------------- | --------------------- |
+| 🏁 Completion | Every task completion |
 
 ### Contextually Required
 
@@ -393,8 +362,8 @@ validated, etc.)
 
 ### As Needed
 
-| Box           | Use When                                  |
-| ------------- | ----------------------------------------- |
-| 📊 Confidence | Meaningful uncertainty (<90%)             |
-| ↩️ Pushback   | Genuine disagreement with direction       |
-| 💡 Suggestion | Optional improvement not requested        |
+| Box           | Use When                            |
+| ------------- | ----------------------------------- |
+| 📊 Confidence | Meaningful uncertainty (<90%)       |
+| ↩️ Pushback   | Genuine disagreement with direction |
+| 💡 Suggestion | Optional improvement not requested  |

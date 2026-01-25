@@ -180,6 +180,7 @@ project_learnings() {
 }
 
 # Project boxes from events, applying enrichments
+# Note: Sycophancy boxes are filtered out as anti-sycophancy is now an internal protocol
 project_boxes() {
     local current_repo="$1"
     local now_epoch="$2"
@@ -213,8 +214,8 @@ project_boxes() {
                 }
             end;
 
-        # Collect events
-        (map(select((.event // "BoxCreated") == "BoxCreated")) | map(normalize_box)) as $boxes |
+        # Collect events (filter out Sycophancy boxes - anti-sycophancy is now internal)
+        (map(select((.event // "BoxCreated") == "BoxCreated")) | map(normalize_box) | map(select(.box_type != "Sycophancy"))) as $boxes |
         (map(select(.event == "BoxEnriched"))) as $enrichments |
 
         # Process each box

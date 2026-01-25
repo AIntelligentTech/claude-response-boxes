@@ -5,7 +5,7 @@
 
 [![CI](https://github.com/AIntelligentTech/agent-response-boxes/actions/workflows/ci.yml/badge.svg)](https://github.com/AIntelligentTech/agent-response-boxes/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.5.0-green.svg)](https://github.com/AIntelligentTech/agent-response-boxes/releases)
+[![Version](https://img.shields.io/badge/version-0.6.0-green.svg)](https://github.com/AIntelligentTech/agent-response-boxes/releases)
 
 **Supported Agents:** Claude Code | OpenCode | Windsurf | Cursor
 
@@ -15,7 +15,7 @@
 
 | Feature                 | Claude Code | OpenCode  | Windsurf    | Cursor     |
 | ----------------------- | ----------- | --------- | ----------- | ---------- |
-| Box Taxonomy (13 types) | ✅ Full     | ✅ Full   | ✅ Full     | ✅ Full    |
+| Box Taxonomy (12 types) | ✅ Full     | ✅ Full   | ✅ Full     | ✅ Full    |
 | Automatic Collection    | ✅ Hook     | ✅ Plugin | ✅ Hook     | ✅ Hook    |
 | Automatic Injection     | ✅ Hook     | ✅ Plugin | ❌ Workflow | ❌ Manual  |
 | /analyze-boxes Skill    | ✅ Native   | ✅ Native | ⚠️ Reuse    | ⚠️ Reuse   |
@@ -52,11 +52,6 @@ using a consistent format.
 **Gaps:** No server-side validation added
 **Improve:** Should have asked about existing validation patterns
 ────────────────────────────────────────────────
-
-🪞 Sycophancy ───────────────────────────────────
-**Rating:** 10/10
-**Check:** Direct technical response, no unnecessary validation
-────────────────────────────────────────────────
 ```
 
 ---
@@ -89,8 +84,10 @@ the start of future sessions so Claude can avoid repeating the same mistakes.
 
 ### 4. Anti-Sycophancy
 
-The mandatory sycophancy check at the end of every substantive response forces
-explicit evaluation: "Am I providing genuine value or just validating?"
+Anti-sycophancy is handled through a sophisticated internal protocol based on
+research (ELEPHANT framework, SMART, self-blinding studies). It operates during
+response generation to ensure honest, direct responses without unnecessary
+validation or praise. See `rules/anti-sycophancy.md` for the full protocol.
 
 ---
 
@@ -158,12 +155,11 @@ context, enabling Claude to apply past corrections and preferences immediately.
 
 ### End Boxes (max 3, in order)
 
-| Box           | When                     | Fields                                        |
-| ------------- | ------------------------ | --------------------------------------------- |
-| 📋 Follow Ups | Next steps exist         | Immediate, Consider, Related                  |
-| 🏁 Completion | Task being completed     | Request, Completed, Confidence, Gaps, Improve |
-| ✅ Quality    | Code was written         | Rating (X/10), Justification                  |
-| 🪞 Sycophancy | **Always** (substantive) | Rating (X/10), Check                          |
+| Box           | When                 | Fields                                        |
+| ------------- | -------------------- | --------------------------------------------- |
+| 📋 Follow Ups | Next steps exist     | Immediate, Consider, Related                  |
+| 🏁 Completion | Task being completed | Request, Completed, Confidence, Gaps, Improve |
+| ✅ Quality    | Code was written     | Rating (X/10), Justification                  |
 
 ---
 
@@ -367,7 +363,6 @@ Before completing any substantive response:
 [ ] Made a judgment call?               → 🎯 Decision
 [ ] Filled unstated requirement?        → 💭 Assumption
 [ ] Completing a task?                  → 🏁 Completion
-[ ] Substantive response?               → 🪞 Sycophancy (always)
 ```
 
 ---
@@ -376,7 +371,6 @@ Before completing any substantive response:
 
 ### Always Required
 
-- 🪞 **Sycophancy** — Every substantive response (>300 chars)
 - 🏁 **Completion** — Every task completion
 
 ### Use When Applicable

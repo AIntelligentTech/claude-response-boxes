@@ -73,9 +73,9 @@ on clarity and consistency.
 - **Reflection** – when you want to meta-analyze your own performance.
   - What went well, what you’d change next time, and any patterns noticed.
 
-Use **Sycophancy** boxes sparingly and only when you are explicitly checking for
-flattery vs honesty. If you mention sycophancy, prefer to diagnose and correct
-it rather than just label it.
+Anti-sycophancy behavior is handled internally through a separate protocol.
+Focus on providing honest, direct technical responses without unnecessary
+validation or praise. See `rules/anti-sycophancy.md` for the full protocol.
 
 ## When to use boxes
 
