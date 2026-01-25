@@ -29,7 +29,7 @@ set -euo pipefail
 # ─────────────────────────────────────────────────────────────────────────────
 
 RAW_URL="https://raw.githubusercontent.com/AIntelligentTech/claude-response-boxes/main"
-VERSION="4.0.0"
+VERSION="0.6.0"
 
 USER_CLAUDE_DIR="${HOME}/.claude"
 PROJECT_CLAUDE_DIR="./.claude"
@@ -183,6 +183,7 @@ is_local_source_dir() {
     local base="${dir}/agents/claude-code"
     [[ -f "${base}/output-styles/response-box.md" ]] || return 1
     [[ -f "${base}/rules/response-boxes.md" ]] || return 1
+    [[ -f "${base}/rules/anti-sycophancy.md" ]] || return 1
     [[ -f "${base}/hooks/inject-context.sh" ]] || return 1
     [[ -f "${base}/hooks/session-processor.sh" ]] || return 1
     [[ -f "${base}/skills/analyze-boxes/SKILL.md" ]] || return 1
@@ -503,6 +504,7 @@ install_output_style() {
 install_rules() {
     log "Installing rules..."
     install_managed_file "agents/claude-code/rules/response-boxes.md" "${CLAUDE_DIR}/rules/response-boxes.md"
+    install_managed_file "agents/claude-code/rules/anti-sycophancy.md" "${CLAUDE_DIR}/rules/anti-sycophancy.md"
 }
 
 install_hooks() {
@@ -860,6 +862,7 @@ uninstall() {
 
     local files_to_remove=(
         "${CLAUDE_DIR}/rules/response-boxes.md"
+        "${CLAUDE_DIR}/rules/anti-sycophancy.md"
     )
 
     if [[ "$INSTALL_SCOPE" == "user" ]]; then
