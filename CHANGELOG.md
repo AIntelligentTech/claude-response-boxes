@@ -8,6 +8,16 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.7.2] - 2026-01-30
+
+### Changed
+
+- **Repository hygiene:** Refresh README, support + security guidance, and GitHub
+  templates to align with the `agent-response-boxes` rename and the shipped
+  `outputs/` install model
+- **Docs accuracy:** Update cross-agent compatibility docs for Cursor 2.4+ skills
+  and Windsurf skills support
+
 ## [0.7.1] - 2026-01-30
 
 ### Fixed
@@ -183,7 +193,9 @@ Historical Sycophancy boxes remain in the event store but are not projected.
 - Installation script with dry-run support
 
 [Unreleased]:
-  https://github.com/AIntelligentTech/agent-response-boxes/compare/v0.7.1...HEAD
+  https://github.com/AIntelligentTech/agent-response-boxes/compare/v0.7.2...HEAD
+[0.7.2]:
+  https://github.com/AIntelligentTech/agent-response-boxes/compare/v0.7.1...v0.7.2
 [0.7.1]:
   https://github.com/AIntelligentTech/agent-response-boxes/compare/v0.7.0...v0.7.1
 [0.7.0]:

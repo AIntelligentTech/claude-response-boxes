@@ -49,8 +49,13 @@ This data may contain:
 
 ### Collection
 
-- Boxes are extracted from AI responses at session end
-- Only structured box content is stored, not full conversation transcripts
+- Boxes are extracted from AI responses by agent-specific adapters:
+  - Claude Code: SessionEnd hook parses the local transcript
+  - OpenCode: plugin listens to message events
+  - Windsurf/Cursor: response hooks collect from the assistant output
+- Only structured box content is intended to be stored (not full transcripts), but
+  response text may include code samples and project metadata depending on agent
+  capabilities and configuration
 - Collection is local-only; no data is sent to external servers
 
 ### Storage
@@ -139,8 +144,8 @@ Security updates will be announced via:
 
 ## Version
 
-This security policy applies to Response Boxes v4.0.0 and later.
+This security policy applies to Agent Response Boxes v0.7.1 and later.
 
 ---
 
-Last updated: 2026-01-24
+Last updated: 2026-01-30

@@ -1,6 +1,6 @@
 # Cross-Agent Compatibility Guide
 
-**Version:** 1.0.0 **Last Updated:** 2026-01-24 **Status:** Living Document
+**Version:** 1.0.1 **Last Updated:** 2026-01-30 **Status:** Living Document
 
 This document provides comprehensive compatibility information for Response
 Boxes across AI coding agents, including capability matrices, implementation
@@ -20,7 +20,7 @@ achievable.
 | ------------ | ------------------------------------------- | ----------------------- |
 | **Full**     | Automatic collection + injection + analysis | Claude Code, OpenCode   |
 | **Enhanced** | Automatic collection + manual injection     | Windsurf                |
-| **Basic**    | Manual collection + manual injection        | Cursor, Aider, Continue |
+| **Basic**    | Automatic collection + manual injection     | Cursor, Aider, Continue |
 | **Minimal**  | Prompt-only guidance (no persistence)       | Any LLM via AGENTS.md   |
 
 ---
@@ -31,7 +31,7 @@ achievable.
 
 | Feature                     | Claude Code | OpenCode        | Windsurf    | Cursor     |
 | --------------------------- | ----------- | --------------- | ----------- | ---------- |
-| **Box Taxonomy (13 types)** | ✅ Full     | ✅ Full         | ✅ Full     | ✅ Full    |
+| **Box Taxonomy (12 types)** | ✅ Full     | ✅ Full         | ✅ Full     | ✅ Full    |
 | **Output Style**            | ✅ Native   | ⚠️ Instructions | ⚠️ Rules    | ⚠️ Rules   |
 | **Automatic Collection**    | ✅ Hook     | ✅ Plugin       | ✅ Hook     | ✅ Hook    |
 | **Automatic Injection**     | ✅ Hook     | ✅ Plugin       | ❌ Workflow | ❌ Manual  |
@@ -48,7 +48,7 @@ achievable.
 | **Response Capture Hook** | ✅ PostToolUse       | ✅ message.updated  | ✅ post_cascade_response | ✅ afterAgentResponse |
 | **Context Injection**     | ✅ additionalContext | ✅ system.transform | ❌ None                  | ❌ None               |
 | **Response Modification** | ❌ No                | ❌ No               | ❌ No                    | ❌ No                 |
-| **Skills/Commands**       | ✅ Full              | ✅ Full             | ✅ Workflows             | ⚠️ Nightly            |
+| **Skills/Commands**       | ✅ Full              | ✅ Full             | ✅ Skills + workflows    | ✅ Skills (2.4+)       |
 | **Rules System**          | ✅ .claude/rules     | ✅ AGENTS.md        | ✅ .windsurf/rules       | ✅ .cursor/rules      |
 
 ---
@@ -151,6 +151,7 @@ agents/opencode/
 
 - `post_cascade_response` hook - Captures full model output
 - `.windsurf/workflows/` - Slash-command workflows
+- `.windsurf/skills/` - Skills (auto-invoked or manually invoked via @skill-name)
 - `.windsurf/rules/` - Behavioral rules (12k char limit)
 - Memories - NOT programmatically accessible
 
@@ -213,13 +214,13 @@ agents/windsurf/
 
 **Status:** Basic Support (Automatic Collection, Manual Injection)
 
-**Version Requirements:** v1.7+ (October 2025)
+**Version Requirements:** v2.4+ for skills (January 2026); hooks exist earlier but skills are the recommended injection surface
 
 **Extension Points:**
 
 - `afterAgentResponse` hook - Observes assistant text
 - `afterAgentThought` hook - Observes thinking blocks
-- `.cursor/skills/` - Skills (Nightly only)
+- `.cursor/skills/` - Skills (stable in Cursor 2.4+)
 - `.cursor/rules/` - Rules (.md, .mdc)
 
 **Key Files:**
@@ -275,7 +276,7 @@ with no modification capability.
 **Limitations:**
 
 - No automatic injection possible
-- Skills only in Nightly channel
+- No session lifecycle hook equivalent to Claude’s SessionStart injection
 - Cannot modify agent context programmatically
 - User must manually invoke context skill
 

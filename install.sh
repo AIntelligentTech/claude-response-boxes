@@ -2,7 +2,7 @@
 #
 # Agent Response Boxes - Installer v5.0
 #
-# A metacognitive annotation system for Claude Code responses with
+# A metacognitive annotation system for AI coding agents with
 # cross-session learning capabilities.
 #
 # QUICK INSTALL (user-level):
@@ -32,7 +32,7 @@ PRIMARY_RAW_URL="https://raw.githubusercontent.com/AIntelligentTech/agent-respon
 # Back-compat while the repo is being renamed on GitHub.
 LEGACY_RAW_URL="https://raw.githubusercontent.com/AIntelligentTech/claude-response-boxes/main"
 RAW_URL="${PRIMARY_RAW_URL}"
-VERSION="0.7.1"
+VERSION="0.7.2"
 
 USER_CLAUDE_DIR="${HOME}/.claude"
 PROJECT_CLAUDE_DIR="./.claude"

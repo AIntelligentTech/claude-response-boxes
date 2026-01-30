@@ -36,8 +36,9 @@ What actually happened.
 
 Check which files are affected:
 
-- [ ] hooks/inject-context.sh
-- [ ] hooks/session-processor.sh
+- [ ] Claude hooks (inject-context.sh / session-processor.sh)
+- [ ] Windsurf collector hook (windsurf-collector.sh)
+- [ ] Cursor collector hook (cursor-collector.sh)
 - [ ] install.sh
 - [ ] OpenCode plugin
 - [ ] Rules/output styles
