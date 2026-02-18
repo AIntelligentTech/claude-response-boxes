@@ -1,0 +1,50 @@
+# Gitleaks configuration for business-os and portfolio repos
+# See: https://github.com/gitleaks/gitleaks
+#
+# This config extends gitleaks defaults with business-specific patterns.
+# Copy to any repo root as `.gitleaks.toml` to enable pre-commit scanning.
+
+title = "business-os gitleaks config"
+
+# Additional rules beyond gitleaks defaults
+[[rules]]
+id = "bitwarden-export"
+description = "Bitwarden password export file"
+regex = '''bitwarden_export.*\.json'''
+keywords = ["bitwarden"]
+
+[[rules]]
+id = "google-api-key-in-code"
+description = "Google API key hardcoded in source (not env var)"
+regex = '''AIzaSy[A-Za-z0-9_-]{33}'''
+keywords = ["AIzaSy"]
+
+[[rules]]
+id = "expo-env-hardcoded"
+description = "Expo environment variable hardcoded in source"
+regex = '''EXPO_PUBLIC_[A-Z_]+=\S+'''
+path = '''\.(?:ts|tsx|js|jsx)$'''
+keywords = ["EXPO_PUBLIC_"]
+
+[[rules]]
+id = "supabase-service-role"
+description = "Supabase service role key"
+regex = '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+'''
+keywords = ["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"]
+
+# Allowlist — paths that are expected to contain key patterns
+[allowlist]
+description = "Files that legitimately reference key patterns"
+paths = [
+  '''\.env\.example$''',
+  '''\.env\.template$''',
+  '''CLAUDE\.md$''',
+  '''\.gitleaks\.toml$''',
+  '''jest\.setup\.(ts|js)$''',
+  '''__tests__/.*\.(ts|js)$''',
+  '''__mocks__/.*\.(ts|js)$''',
+  '''\.test\.(ts|tsx|js|jsx)$''',
+]
+
+# Never scan these paths
+regexTarget = "line"

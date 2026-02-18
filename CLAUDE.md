@@ -1,6 +1,6 @@
 # Response Boxes - Project Instructions
 
-**Version:** 0.7.0 **Type:** Multi-agent metacognitive annotation system
+**Version:** 0.8.0 **Type:** Multi-agent metacognitive annotation system
 
 ---
 
@@ -34,7 +34,8 @@ agents/
 │   ├── config/            # CLAUDE.md snippet
 │   ├── hooks/             # SessionStart/SessionEnd hooks
 │   ├── output-styles/     # response-box.md output style
-│   ├── rules/             # response-boxes.md, anti-sycophancy.md
+│   ├── references/        # Full specs (loaded on demand)
+│   ├── rules/core/        # Compact summaries (always loaded)
 │   └── skills/            # /analyze-boxes skill
 ├── cursor/                # Cursor integration (basic support)
 │   ├── hooks/             # cursor-collector.sh
@@ -67,10 +68,10 @@ install.sh                 # Universal installer script
 
 ### Core Specification
 
-- `agents/claude-code/rules/response-boxes.md` — Complete box taxonomy and usage
-  guidelines (12 box types)
-- `agents/claude-code/rules/anti-sycophancy.md` — Research-backed internal
-  protocol for preventing sycophantic behavior (v0.6.0)
+- `agents/claude-code/rules/core/response-boxes.md` — Compact summary (always
+  loaded, ~460 tokens)
+- `agents/claude-code/references/response-boxes.md` — Complete box taxonomy and
+  usage guidelines (12 box types, loaded on demand)
 - `agents/claude-code/output-styles/response-box.md` — Active output style for
   Claude Code sessions
 
@@ -151,53 +152,29 @@ Follow conventional commits:
 
 ---
 
-## v0.7.0 Changes (Current)
+## v0.8.0 Changes (Current)
 
-### Build-time outputs (CACE)
+### Progressive Disclosure Restructure
 
-This repository now commits an `outputs/` directory generated with CACE:
+- **Compact core summary** in `rules/core/response-boxes.md` (~460 tokens,
+  always loaded)
+- **Full specification** in `references/response-boxes.md` (~3K tokens, loaded
+  on demand)
+- **Anti-sycophancy removed** — now owned by business-os-cofounder module
+- Installer updated for two-tier structure (core/ + references/)
+- Added `.gitleaks.toml` for secret prevention
 
-```bash
-./bin/cace-build
-git diff outputs/
-```
+### v0.7.x Changes
 
-The installer installs from `outputs/` (preferred) to keep installs stable and
-offline-friendly.
+- Build-time outputs (CACE) — `outputs/` directory for stable, offline installs
+- Repository rename: `claude-response-boxes` → `agent-response-boxes`
+- Installer includes temporary raw URL fallback for transition
 
-### Repository rename (pending)
+### v0.6.0 Changes
 
-This repository is being renamed from `claude-response-boxes` to
-`agent-response-boxes`. The installer includes a temporary raw URL fallback to
-handle the transition.
-
-### Breaking Changes
-
-- **Removed 🪞 Sycophancy box** from response box taxonomy
-- Anti-sycophancy is now an internal protocol (no visible output)
-
-### Key Files Changed
-
-- `agents/claude-code/rules/response-boxes.md` — Removed Sycophancy spec
-- `agents/claude-code/rules/anti-sycophancy.md` — NEW: Research-backed protocol
-- `agents/claude-code/hooks/inject-context.sh` — Filters Sycophancy boxes
-- `agents/claude-code/hooks/session-processor.sh` — Removed Sycophancy scoring
+- Removed Sycophancy box from response box taxonomy
+- Anti-sycophancy became an internal protocol (no visible output)
 - All agent rules files updated
-
-### Anti-Sycophancy Protocol
-
-Based on peer-reviewed research:
-
-- **ELEPHANT Framework** — Five dimensions of social sycophancy
-- **SMART Framework** — System 2 thinking reduces sycophancy 31-46%
-- **Self-Blinding Research** — Counterfactual checking reveals knowing
-  sycophancy
-
-Key techniques:
-
-- System 2 self-interrogation (challenge detection, counterfactual check)
-- Third-person perspective (63.8% reduction)
-- Banned phrases ("You're absolutely right!", "Great question!", etc.)
 
 ---
 

@@ -13,18 +13,17 @@ Before completing any substantive response (>300 chars):
 [ ] Made a judgment call?               → 🎯 Decision
 [ ] Filled unstated requirement?        → 💭 Assumption
 [ ] Completing a task?                  → 🏁 Completion
-[ ] Substantive response?               → 🪞 Sycophancy (always)
 ```
 
 ### Quick Reference
 
 | Inline        | When                          | End           | When                 |
 | ------------- | ----------------------------- | ------------- | -------------------- |
-| ⚖️ Choice     | Selected between alternatives | 📋 Follow Up  | Next steps exist     |
-| 🎯 Decision   | Made judgment call            | 🏁 Completion | Task completed       |
-| 💭 Assumption | Filled unstated requirement   | ✅ Quality    | Code was written     |
-| 🔄 Reflection | Applied prior learning        | 🪞 Sycophancy | Always (substantive) |
-| ⚠️ Concern    | Potential risk                |               |                      |
+| ⚖️ Choice     | Selected between alternatives | 📋 Follow Up  | Next steps exist |
+| 🎯 Decision   | Made judgment call            | 🏁 Completion | Task completed   |
+| 💭 Assumption | Filled unstated requirement   | ✅ Quality    | Code was written |
+| 🔄 Reflection | Applied prior learning        |               |                  |
+| ⚠️ Concern    | Potential risk                |               |                  |
 | 📊 Confidence | Uncertainty <90%              |               |                      |
 | ↩️ Pushback   | Disagree with direction       |               |                      |
 | 💡 Suggestion | Optional improvement          |               |                      |

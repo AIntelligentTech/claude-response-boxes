@@ -32,7 +32,7 @@ PRIMARY_RAW_URL="https://raw.githubusercontent.com/AIntelligentTech/agent-respon
 # Back-compat while the repo is being renamed on GitHub.
 LEGACY_RAW_URL="https://raw.githubusercontent.com/AIntelligentTech/claude-response-boxes/main"
 RAW_URL="${PRIMARY_RAW_URL}"
-VERSION="0.7.2"
+VERSION="0.8.0"
 
 USER_CLAUDE_DIR="${HOME}/.claude"
 PROJECT_CLAUDE_DIR="./.claude"
@@ -186,19 +186,17 @@ is_local_source_dir() {
     # Preferred (build-time) layout: committed outputs/ tree.
     local outputs_base="${dir}/outputs/claude/.claude"
     if [[ -f "${outputs_base}/output-styles/response-box.md" ]] \
-        && [[ -f "${outputs_base}/rules/response-boxes.md" ]] \
-        && [[ -f "${outputs_base}/rules/anti-sycophancy.md" ]] \
         && [[ -f "${outputs_base}/hooks/inject-context.sh" ]] \
         && [[ -f "${outputs_base}/hooks/session-processor.sh" ]] \
         && [[ -f "${outputs_base}/skills/analyze-boxes/SKILL.md" ]]; then
         return 0
     fi
 
-    # Legacy (source) layout: agents/ tree.
+    # Source layout: agents/ tree with progressive disclosure.
     local base="${dir}/agents/claude-code"
     [[ -f "${base}/output-styles/response-box.md" ]] || return 1
-    [[ -f "${base}/rules/response-boxes.md" ]] || return 1
-    [[ -f "${base}/rules/anti-sycophancy.md" ]] || return 1
+    [[ -f "${base}/rules/core/response-boxes.md" ]] || return 1
+    [[ -f "${base}/references/response-boxes.md" ]] || return 1
     [[ -f "${base}/hooks/inject-context.sh" ]] || return 1
     [[ -f "${base}/hooks/session-processor.sh" ]] || return 1
     [[ -f "${base}/skills/analyze-boxes/SKILL.md" ]] || return 1
@@ -422,11 +420,14 @@ report_status() {
         fi
     fi
 
-    if [[ -f "${USER_CLAUDE_DIR}/rules/response-boxes.md" ]]; then
-        log "User rules: present"
+    if [[ -f "${USER_CLAUDE_DIR}/rules/core/response-boxes.md" ]]; then
+        log "User rules (core summary): present"
     fi
-    if [[ -f "${PROJECT_CLAUDE_DIR}/rules/response-boxes.md" ]]; then
-        log "Project rules: present"
+    if [[ -f "${USER_CLAUDE_DIR}/references/response-boxes.md" ]]; then
+        log "User references (full spec): present"
+    fi
+    if [[ -f "${PROJECT_CLAUDE_DIR}/rules/core/response-boxes.md" ]]; then
+        log "Project rules (core summary): present"
     fi
 }
 
@@ -522,8 +523,13 @@ install_output_style() {
 
 install_rules() {
     log "Installing rules..."
-    install_managed_file "outputs/claude/.claude/rules/response-boxes.md" "${CLAUDE_DIR}/rules/response-boxes.md"
-    install_managed_file "outputs/claude/.claude/rules/anti-sycophancy.md" "${CLAUDE_DIR}/rules/anti-sycophancy.md"
+    # Compact core summary (always loaded)
+    run_cmd mkdir -p "${CLAUDE_DIR}/rules/core"
+    install_managed_file "agents/claude-code/rules/core/response-boxes.md" "${CLAUDE_DIR}/rules/core/response-boxes.md"
+
+    # Full spec (loaded on demand via reference pointer)
+    run_cmd mkdir -p "${CLAUDE_DIR}/references"
+    install_managed_file "agents/claude-code/references/response-boxes.md" "${CLAUDE_DIR}/references/response-boxes.md"
 }
 
 install_hooks() {
@@ -880,6 +886,9 @@ uninstall() {
     echo ""
 
     local files_to_remove=(
+        "${CLAUDE_DIR}/rules/core/response-boxes.md"
+        "${CLAUDE_DIR}/references/response-boxes.md"
+        # Legacy flat files from pre-0.7.0
         "${CLAUDE_DIR}/rules/response-boxes.md"
         "${CLAUDE_DIR}/rules/anti-sycophancy.md"
     )
@@ -1065,7 +1074,8 @@ main() {
 
     echo "Installed:"
     echo "  • Output Style: ~/.claude/output-styles/response-box.md"
-    echo "  • Rules:        ${CLAUDE_DIR}/rules/response-boxes.md"
+    echo "  • Rules:        ${CLAUDE_DIR}/rules/core/response-boxes.md (compact)"
+    echo "  • References:   ${CLAUDE_DIR}/references/response-boxes.md (full spec)"
     echo "  • CLAUDE.md:    Updated with pre-response checklist"
     if [[ "$INSTALL_SCOPE" == "user" ]] && [[ "$INSTALL_MODE" == "full" ]]; then
         echo "  • Hooks:        ~/.claude/hooks/"
